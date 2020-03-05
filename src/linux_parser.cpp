@@ -124,10 +124,44 @@ long LinuxParser::IdleJiffies() { return 0; }
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
 // TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+int LinuxParser::TotalProcesses() { 
+  int numberProcesses = 0; 
+  
+  std::ifstream filestream(kStatFilename);
+  if (filestream.is_open()) {
+    std::string line;
+    while (std::getline(filestream, line)) {
+      std::istringstream lineStream(line);
+      std::string argument;
+      if ((lineStream >> argument) && argument == "processes") {
+        lineStream >> numberProcesses;
+        return numberProcesses;
+      }
+    }
+  }
+
+  return numberProcesses;
+}
 
 // TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+int LinuxParser::RunningProcesses() { 
+  int processesRunning = 0; 
+  
+  std::ifstream filestream(kStatFilename);
+  if (filestream.is_open()) {
+    std::string line;
+    while (std::getline(filestream, line)) {
+      std::istringstream lineStream(line);
+      std::string argument;
+      if ((lineStream >> argument) && argument == "procs_running") {
+        lineStream >> processesRunning;
+        return processesRunning;
+      }
+    }
+  }
+
+  return processesRunning;
+ }
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
