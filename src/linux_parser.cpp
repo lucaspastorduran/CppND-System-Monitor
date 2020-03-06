@@ -71,7 +71,7 @@ float LinuxParser::MemoryUtilization() {
   float totalMemory = 0.0f;
   float freeMemory = 0.0f;
  
-  std::ifstream filestream(kMeminfoFilename);
+  std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
     std::string line;
     std::string argument;
@@ -99,7 +99,7 @@ float LinuxParser::MemoryUtilization() {
 long LinuxParser::UpTime() { 
   long uptimeInSeconds = 0; 
   
-  std::ifstream filestream(kUptimeFilename);
+  std::ifstream filestream(kProcDirectory + kUptimeFilename);
   if (filestream.is_open()) {
     filestream >> uptimeInSeconds;
   }
@@ -127,13 +127,14 @@ vector<string> LinuxParser::CpuUtilization() { return {}; }
 int LinuxParser::TotalProcesses() { 
   int numberProcesses = 0; 
   
-  std::ifstream filestream(kStatFilename);
+  std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     std::string line;
     while (std::getline(filestream, line)) {
       std::istringstream lineStream(line);
       std::string argument;
-      if ((lineStream >> argument) && argument == "processes") {
+      lineStream >> argument;
+      if (argument == "processes") {
         lineStream >> numberProcesses;
         return numberProcesses;
       }
@@ -147,7 +148,7 @@ int LinuxParser::TotalProcesses() {
 int LinuxParser::RunningProcesses() { 
   int processesRunning = 0; 
   
-  std::ifstream filestream(kStatFilename);
+  std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     std::string line;
     while (std::getline(filestream, line)) {
