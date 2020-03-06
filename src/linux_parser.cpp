@@ -92,7 +92,7 @@ float LinuxParser::MemoryUtilization() {
   }
 
   float usedMemory = totalMemory - freeMemory;
-  return totalMemory == 0.0 ? 0.0 : (usedMemory/totalMemory)*100.0;
+  return totalMemory == 0.0 ? 0.0 : (usedMemory/totalMemory);
 }
 
 // TODO: Read and return the system uptime
