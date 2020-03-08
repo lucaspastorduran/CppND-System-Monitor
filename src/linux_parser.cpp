@@ -134,10 +134,14 @@ vector<long> LinuxParser::CpuUtilization() {
   
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
-    for (int i = 0; i < CPUStates::END; i++) {
-      long value;
-      filestream >> value;
-      cpuJiffies.push_back(value);
+    std::string cpu;
+    filestream >> cpu;
+    if (cpu == "cpu") {
+      for (int i = 0; i < CPUStates::END; i++) {
+        long value;
+        filestream >> value;
+        cpuJiffies.push_back(value);
+      }
     }
   }
 
