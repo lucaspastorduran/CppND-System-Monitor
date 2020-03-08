@@ -1,4 +1,27 @@
+#include "linux_parser.h"
 #include "processor.h"
 
+Processor::Processor() :
+    _prevIdle(LinuxParser::IdleJiffies()),
+    _prevNonIdle(LinuxParser::ActiveJiffies()),
+    _prevTotal(_prevIdle + _prevNonIdle)
+{}
+
 // TODO: Return the aggregate CPU utilization
-float Processor::Utilization() { return 0.0; }
+float Processor::Utilization() { 
+    const long currIdle = LinuxParser::IdleJiffies(); 
+    const long currNonIdle = LinuxParser::ActiveJiffies(); 
+    const long currTotal = currIdle + currNonIdle;
+
+    // Compute for time increment
+    const long deltaIdle = currIdle - _prevIdle;
+    const long deltaTotal = currTotal - _prevTotal;
+
+    // Update previous Idle, Active and Total time
+    _prevIdle = currIdle;
+    _prevNonIdle = currNonIdle;
+    _prevTotal = currTotal;
+    
+    const float cpuUsage = deltaTotal == 0 ? 0.0f : (deltaTotal - deltaIdle)*1.0/deltaTotal;
+    return cpuUsage;
+}
