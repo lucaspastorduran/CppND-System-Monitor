@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <string>
+#include <sstream>
 #include <vector>
 
 #include "linux_parser.h"
@@ -9,6 +10,29 @@ using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+
+template <typename T>
+T readValueFromFile(const std::string &path, const std::string &argumentName) {
+  T value;
+  std::ifstream filestream(path);
+
+  if (filestream.is_open()) {
+    std::string line;
+    
+    while (std::getline(filestream, line)) {
+      std::istringstream lineStream(line);
+      std::string argument;
+      lineStream >> argument;
+      
+      if (argument == argumentName) {
+        lineStream >> value;
+        return value;
+      }
+    }
+  }
+
+  return value;
+}
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -199,7 +223,14 @@ string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Uid(int pid) { 
+  std::string userId = "No One";
+  std::stringstream processPath;
+  processPath << kProcDirectory << pid << kStatusFilename;
+
+  userId = readValueFromFile <std::string> (processPath.str(), "Uid:");
+  return userId;
+}
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
