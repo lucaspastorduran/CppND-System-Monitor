@@ -17,13 +17,34 @@ using std::vector;
 System::System() : 
     operatingSystem_(LinuxParser::OperatingSystem()),
     kernelVersion_(LinuxParser::Kernel())
-{ }
+{ 
+}
 
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() {
+    set<int> uniqueIds;
+    for (int i = 0; i < processes_.size(); i++) {
+        uniqueIds.insert(processes_[i].Pid());
+    }
+
+    std::vector<int> ids = LinuxParser::Pids();
+    for (int i = 0; i < ids.size(); i++) {
+        int id = ids[i];
+        if (uniqueIds.find(id) == uniqueIds.end()) {
+            processes_.emplace_back(Process(id));
+        }
+    }
+
+    // TODO: update CPU utilization for each process
+
+    // TODO: sort processes on CPU usage
+    // std::sort(processes_.begin(), processes_.end(), std::greater());
+
+    return processes_; 
+}
 
 // TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() { 
