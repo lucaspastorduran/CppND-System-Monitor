@@ -38,7 +38,7 @@ vector<Process>& System::Processes() {
     }
 
     // TODO: sort processes on CPU usage
-    std::sort(processes_.begin(), processes_.end());
+    std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
 
     return processes_; 
 }
