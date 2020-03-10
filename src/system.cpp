@@ -26,8 +26,8 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
     set<int> uniqueIds;
-    for (int i = 0; i < processes_.size(); i++) {
-        uniqueIds.insert(processes_[i].Pid());
+    for (Process process : processes_) {
+        uniqueIds.insert(process.Pid());
     }
 
     std::vector<int> ids = LinuxParser::Pids();
@@ -37,10 +37,8 @@ vector<Process>& System::Processes() {
         }
     }
 
-    // TODO: update CPU utilization for each process
-
     // TODO: sort processes on CPU usage
-    // std::sort(processes_.begin(), processes_.end(), std::greater());
+    std::sort(processes_.begin(), processes_.end());
 
     return processes_; 
 }
