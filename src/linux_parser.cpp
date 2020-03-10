@@ -193,10 +193,10 @@ string LinuxParser::Ram(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Uid(int pid) { 
   std::string userId = "0000";
-  std::stringstream processPath;
-  processPath << kProcDirectory << pid << kStatusFilename;
+  std::stringstream path;
+  path << kProcDirectory << pid << kStatusFilename;
 
-  userId = readValueFromFile <std::string> (processPath.str(), "Uid:");
+  userId = readValueFromFile <std::string> (path.str(), "Uid:");
   return userId;
 }
 
@@ -230,4 +230,25 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) { 
+  long upTimeInClockTicks = 0;
+
+  std::stringstream path;
+  path << kProcDirectory << pid << kStatFilename;
+    
+  std::ifstream filestream(path.str());
+  if (filestream.is_open()) {
+    // Read 22 arguments. The 22th is the Uptime in clock ticks
+    const int position = 22;
+    std::string value;
+    for (int i = 0; i < position; i++) {
+      if (!(filestream >> value)) {
+        // Return random value in case there is a problem reading file
+        return 10000;
+      }
+    }
+    upTimeInClockTicks = std::stol(value);
+  }
+  
+  return upTimeInClockTicks/sysconf(_SC_CLK_TCK);
+}
