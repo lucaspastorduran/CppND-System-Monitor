@@ -14,7 +14,7 @@ using std::vector;
 Process::Process(const int id) :
     _id(id)
 {
-    _user = LinuxParser::Uid(_id);
+    _user = LinuxParser::User(_id);
 }
 
 // TODO: Return this process's ID
