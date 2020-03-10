@@ -15,6 +15,8 @@ Process::Process(const int id) :
     _id(id)
 {
     _userName = LinuxParser::User(_id);
+    // I assume that the command doesn't change since Process creation
+    _command = LinuxParser::Command(_id);
 }
 
 // TODO: Return this process's ID
