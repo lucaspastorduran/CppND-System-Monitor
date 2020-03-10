@@ -31,7 +31,9 @@ float Process::CpuUtilization() {
     const int processUpTimeSeconds = LinuxParser::UpTime(_id);
     
     const int totalTimeSiceStartUp = systemUpTimeSeconds - processUpTimeSeconds;
-    return (1.0*totalTimeActiveSeconds/totalTimeSiceStartUp);
+
+    _cpuUtilization = 1.0*totalTimeActiveSeconds/totalTimeSiceStartUp;
+    return (_cpuUtilization);
 }
 
 // TODO: Return the command that generated this process

@@ -22,6 +22,7 @@ class Process {
   int _id;
   std::string _userName;
   std::string _command;
+  float _cpuUtilization;
 };
 
 #endif
