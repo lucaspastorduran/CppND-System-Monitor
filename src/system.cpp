@@ -31,8 +31,7 @@ vector<Process>& System::Processes() {
     }
 
     std::vector<int> ids = LinuxParser::Pids();
-    for (int i = 0; i < ids.size(); i++) {
-        int id = ids[i];
+    for (int id: ids) {
         if (uniqueIds.find(id) == uniqueIds.end()) {
             processes_.emplace_back(Process(id));
         }
