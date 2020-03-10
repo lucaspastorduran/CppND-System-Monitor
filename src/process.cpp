@@ -25,7 +25,14 @@ int Process::Pid() {
 }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+float Process::CpuUtilization() {
+    const int systemUpTimeSeconds = LinuxParser::UpTime();
+    const int totalTimeActiveSeconds = LinuxParser::ActiveJiffies(_id);
+    const int processUpTimeSeconds = LinuxParser::UpTime(_id);
+    
+    const int totalTimeSiceStartUp = systemUpTimeSeconds - processUpTimeSeconds;
+    return (1.0*totalTimeActiveSeconds/totalTimeSiceStartUp);
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { 

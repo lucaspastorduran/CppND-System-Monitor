@@ -118,7 +118,32 @@ long LinuxParser::Jiffies() { return 0; }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid) { 
+  long totalTime = 0;
+
+  std::stringstream path;
+  path << kProcDirectory << pid << kStatFilename;
+    
+  std::ifstream filestream(path.str());
+  if (filestream.is_open()) {
+    // Read 13 arguments. The 14th is the Uptime in clock ticks
+    const int position = 13;
+    std::string uselessValue;
+    for (int i = 0; i < position; i++) {
+      if (!(filestream >> uselessValue)) {
+        // Return random value in case there is a problem reading file
+        return 10000;
+      }
+    }
+
+    long userTimeTicks, kernelTimeTicks = 0, userChildrenTimeTicks = 0, kernelChildrenTimeTicks = 0;
+    if (filestream >> userTimeTicks >> kernelTimeTicks >> userChildrenTimeTicks >> kernelChildrenTimeTicks) {
+        totalTime = (userTimeTicks + kernelTimeTicks + userChildrenTimeTicks + kernelChildrenTimeTicks);
+    }
+  }
+  
+  return totalTime/sysconf(_SC_CLK_TCK);
+}
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
