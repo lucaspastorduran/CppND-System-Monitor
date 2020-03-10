@@ -37,6 +37,11 @@ vector<Process>& System::Processes() {
         }
     }
 
+    // Update CPU Process by calling CPU Usage for ALL processes
+    for (Process& process: processes_) {
+        process.CpuUtilization();
+    }
+
     // TODO: sort processes on CPU usage
     std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
 
