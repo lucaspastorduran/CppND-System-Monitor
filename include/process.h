@@ -20,7 +20,7 @@ class Process {
   // TODO: Declare any necessary private members
  private:
   int _id;
-  std::string _user;
+  std::string _userName;
   std::string _command;
 };
 

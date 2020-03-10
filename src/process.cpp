@@ -14,7 +14,7 @@ using std::vector;
 Process::Process(const int id) :
     _id(id)
 {
-    _user = LinuxParser::User(_id);
+    _userName = LinuxParser::User(_id);
 }
 
 // TODO: Return this process's ID
@@ -35,7 +35,7 @@ string Process::Ram() { return string(); }
 
 // TODO: Return the user (name) that generated this process
 string Process::User() { 
-    return _user; 
+    return _userName; 
 }
 
 // TODO: Return the age of this process (in seconds)
