@@ -32,7 +32,7 @@ float Process::CpuUtilization() {
     
     const int totalTimeSiceStartUp = systemUpTimeSeconds - processUpTimeSeconds;
 
-    _cpuUtilization = 1.0*totalTimeActiveSeconds/totalTimeSiceStartUp;
+    _cpuUtilization = (1.0*totalTimeActiveSeconds)/totalTimeSiceStartUp;
     return (_cpuUtilization);
 }
 
